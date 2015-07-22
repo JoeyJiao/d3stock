@@ -14,6 +14,10 @@ angular.module('clientApp')
         var duration = 200;
         var brushHeight = height/5;
 
+        var xMin = d3.min(data, function(d){ return d.x; });
+        var xMax = d3.max(data, function(d){ return d.x; });
+        var yMax = d3.max(data, function(d){ return d.max; });
+
         svg.attr('width', width)
             .attr('height', height + brushHeight)
             .style('border', '1px solid gray');
@@ -33,17 +37,16 @@ angular.module('clientApp')
         xLabelNode.append('path')
             .style('display', 'none')
             .attr('d', tag_path)
-            .attr('transform', 'translate(-30,-15)scale(0.85)');
-        xLabelNode.append('text')
-            .attr('transform', 'translate(-20)');
+            .attr('transform', 'translate(-60,-15)scale(0.85)');
+        xLabelNode
+            .append('text');
 
         yLabelNode.append('path')
             .style('display', 'none')
             .attr('d', tag_path)
-            .attr('transform', 'translate(-30,-15)scale(0.85)');
-        yLabelNode.append('text')
-            .attr('transform', 'translate(-20)');
-
+            .attr('transform', 'translate(-30,-15)scale(0.7)');
+        yLabelNode
+            .append('text');
 
         var xScale = d3.scale.linear()
             .domain(d3.extent(data, function(d){ return d.x; }))
@@ -151,9 +154,6 @@ angular.module('clientApp')
             var pos = d3.mouse(this);
             var xValue = xScale.invert(pos[0]);
             var yValue = yScale.invert(pos[1]);
-            var xMin = d3.min(data, function(d){ return d.x; });
-            var xMax = d3.max(data, function(d){ return d.x; });
-            var yMax = d3.max(data, function(d){ return d.max; });
 
 			var xBisect = d3.bisector(function(d){ return d.x; }).left;
 			var index = xBisect(data, xValue);
@@ -164,7 +164,7 @@ angular.module('clientApp')
 			var d1 = data[index];
 			var d = xValue - d0.x > d1.x - xValue ? d1 : d0;
 
-			var xLeft = xScale(d.x) + xMargin;
+			var xLeft = xScale(d.x);
 			var xTop = yScale(0);
 
             xCursor
@@ -177,24 +177,22 @@ angular.module('clientApp')
 				.transition()
 				.duration(duration)
 				.ease('cubic')
-                .attr('transform', 'translate(' + xLeft + ',' + xTop + ')rotate(90)')
+                .attr('transform', 'translate(' + xLeft + ',' + xTop + ')rotate(-90)')
 				.select('text')
-				.attr('transform', 'translate(13,-7)rotate(180)')
+				.attr('transform', 'translate(-55,5)')
                 .text(d.x);
 			xLabel.select('path')
 				.style('display', 'block');
 
-			var yLeft = xScale(xMin);
-			var yTop = yScale(d.y) + yMargin;
-
+            var y = pos[1] < margin ? margin: pos[1] > height - margin ? (height - margin) : pos[1];
 			yLabel
 				.transition()
 				.duration(duration)
 				.ease('cubic')
-				.attr('transform', 'translate(' + (margin/2 + yMargin) + ',' + pos[1] + ')')
+				.attr('transform', 'translate(' + (margin/2 + yMargin) + ',' + y + ')')
 				.select('text')
-				.attr('transform', 'translate(-10,3)')
-				.text(d3.format('f')(yValue));
+				.attr('transform', 'translate(-20,3)')
+				.text(pos[1] < margin ? yMax: pos[1] > height - margin ? 0: d3.format('f')(yValue));
 			yLabel.select('path')
 				.style('display', 'block');
 
