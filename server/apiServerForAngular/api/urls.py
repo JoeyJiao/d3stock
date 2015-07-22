@@ -8,4 +8,5 @@ router.register(r'group', views.GroupViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^stockyearrange/(?P<stockcode>[0-9]{6})$', views.StockYearRangeView.as_view()),
 ]

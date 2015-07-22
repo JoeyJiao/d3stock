@@ -1,6 +1,11 @@
+import requests
+import csv
+import json
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
+from rest_framework import viewsets, authentication, permissions
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .serializers import UserSerializer, GroupSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -16,3 +21,24 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
+class StockYearRangeView(APIView):
+    # authentication_classes = (authentication.BaseAuthentication,)
+    # permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, stockcode, format=None):
+        suffix = ''
+        if stockcode.startswith('0'):
+            suffix = 'sz'
+        else:
+            suffix = 'ss'
+
+        resp = requests.get('http://table.finance.yahoo.com/table.csv?s=%s.%s' % (stockcode, suffix))
+        if resp.status_code == 200:
+            data = resp.text.split('\n')[:-1]
+            keys = data[0].split(',')
+            out = [{
+                key: val for key, val in zip(keys, prop.split(','))
+            } for prop in data[1:]]
+
+        return Response(json.dumps(out))
