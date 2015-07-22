@@ -40,5 +40,7 @@ class StockYearRangeView(APIView):
             out = [{
                 key: val for key, val in zip(keys, prop.split(','))
             } for prop in data[1:]]
+        else:
+            out = []
 
         return Response(json.dumps(out))
