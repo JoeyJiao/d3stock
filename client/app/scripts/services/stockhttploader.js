@@ -10,6 +10,7 @@
 angular.module('clientApp')
   .factory('StockHttpLoader', ['$http', function ($http) {
     return function(url){
+        console.info("Get " + url);
         return $http.get(url);
     };
   }]);

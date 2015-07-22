@@ -27,6 +27,7 @@ angular.module('clientApp')
     function load(code){
         StockHttpLoader($scope.stock.url + code)
             .then(function(response){
+                console.info("Got data from " + $scope.stock.url + code);
                 var data = StockYearNest(JSON.parse(response.data), function(d){
                     return (new Date(d.Date)).getFullYear();
                 });

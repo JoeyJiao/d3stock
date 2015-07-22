@@ -10,12 +10,14 @@ angular.module('clientApp')
   .directive('stockYearRange', function () {
     var draw = function(svg, width, height, data){
         var margin = 40;
+        var brushMargin = margin/2;
         var duration = 200;
+        var brushHeight = height/5;
 
-        svg .attr('width', width)
-            .attr('height', height)
+        svg.attr('width', width)
+            .attr('height', height + brushHeight)
             .style('border', '1px solid gray');
-        svg.append('g').attr('class', 'data');
+        svg.append('g').attr('class', 'data').attr("height", height - margin);
         svg.append('g').attr('class', 'x-axis axis');
         svg.append('g').attr('class', 'y-axis axis');
 
@@ -49,14 +51,15 @@ angular.module('clientApp')
 
         var xAxis = d3.svg.axis()
             .scale(xScale)
-            .orient('top');
+            .ticks(5)
+            .orient('bottom');
 
         var yScale = d3.scale.linear()
             .domain([
-				0,
+                0,
                 d3.max(data, function(d){ return d.max; })
             ])
-            .range([margin, height - margin]);
+            .range([height - margin, margin]);
 
         var yAxis = d3.svg.axis()
             .scale(yScale)
@@ -64,12 +67,79 @@ angular.module('clientApp')
             .tickFormat(d3.format('f'));
 
         svg.select('.x-axis')
-            .attr("transform", "translate(0, " + margin + ")")
+            .attr("transform", "translate(0, " + (height - margin) + ")")
             .call(xAxis);
 
         svg.select('.y-axis')
             .attr("transform", "translate(" + margin + ")")
             .call(yAxis);
+
+        var max = d3.max(data, function(d){ return d.x; });
+        var brushScale = d3.scale.linear()
+            .domain(d3.extent(data, function(d){ return d.x; }))
+            .range([margin, width - margin]);
+        var brush = d3.svg.brush()
+            .x(brushScale)
+            .extent([max-5, max]);
+        var brushContainer = svg.append("g")
+            .attr("class", "brush")
+            .attr("transform", "translate(0, " + height + ")")
+            .call(brush);
+        brushContainer.selectAll("rect")
+            .attr("y", 0)
+            .attr("height", brushHeight - brushMargin);
+        var brushAxis = d3.svg.axis()
+            .scale(brushScale)
+            .orient('bottom');
+        var brushAxisContainer = svg.append("g")
+            .attr("class", "b-axis axis")
+            .attr("transform", "translate(0, " + (height + brushHeight - brushMargin) + ")")
+            .call(brushAxis);
+        var brushYScale = d3.scale.linear()
+            .domain([
+				0,
+                d3.max(data, function(d){ return d.max; })
+            ])
+            .range([brushHeight - brushMargin, brushMargin]);
+        var brushUpdate = brushContainer.append("g").selectAll('rect').data(data);
+        brushUpdate.enter()
+            .append('rect');
+        brushUpdate.style('fill', 'red')
+            .attr('x', function(d){ return brushScale(d.x); })
+
+            .attr('y', function(d){ return brushYScale(d.max); })
+            .attr('width', 2.5)
+            .attr('height', function(d){ return -(brushYScale(d.max) - brushYScale(d.min)); });
+        brush.on('brushend', function(){
+            xScale.domain(brush.extent());
+            svg.select('.x-axis')
+                .transition()
+                .duration(duration)
+                .call(xAxis);
+            var update = svg.select('.data')
+                .selectAll('rect').data(data);
+    
+            update
+                .attr('x', function(d){ return xScale(d.x); })
+    
+                .attr('y', function(d){ return yScale(d.max); })
+                .attr('width', 2.5)
+                .attr('height', function(d){ return -(yScale(d.max) - yScale(d.min)); });
+//            brushContainer.call(brush.clear());
+        });
+
+//        var zoom = d3.behavior.zoom()
+//            .x(xScale)
+//            .on("zoom", function(){
+//                svg.select(".x-axis").call(xAxis);
+//                svg.select(".data").selectAll("rect").data(data)
+//                    .attr('x', function(d){ return xScale(d.x); });
+//            });           
+//        svg.call(zoom);
+    
+        xScale.domain(brush.extent());
+        svg.select('.x-axis')
+            .call(xAxis);
 
         var xCursor = svg.select('.x-cursor');
         var yCursor = svg.select('.y-cursor');
@@ -137,7 +207,7 @@ angular.module('clientApp')
         });
 
         var update = svg.select('.data')
-            .selectAll('circle').data(data);
+            .selectAll('rect').data(data);
 
         update.enter()
             .append('rect');
@@ -146,9 +216,9 @@ angular.module('clientApp')
             .style('fill', 'red')
             .attr('x', function(d){ return xScale(d.x); })
 
-            .attr('y', function(d){ return yScale(d.min); })
+            .attr('y', function(d){ return yScale(d.max); })
             .attr('width', 2.5)
-            .attr('height', function(d){ return yScale(d.max) - yScale(d.min); });
+            .attr('height', function(d){ return -(yScale(d.max) - yScale(d.min)); });
     };
 
     return {
