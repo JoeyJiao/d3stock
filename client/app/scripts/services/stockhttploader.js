@@ -8,16 +8,8 @@
  * Factory in the clientApp.
  */
 angular.module('clientApp')
-  .factory('StockHttpLoader', function () {
-    // Service logic
-    // ...
-
-    var meaningOfLife = 42;
-
-    // Public API here
-    return {
-      someMethod: function () {
-        return meaningOfLife;
-      }
+  .factory('StockHttpLoader', ['$http', function ($http) {
+    return function(url){
+        return $http.get(url);
     };
-  });
+  }]);

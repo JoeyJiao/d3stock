@@ -1,1 +1,13 @@
-<p>This is the stockyearrange view.</p>
+<center><h3>China stock year value range.</h3></center>
+<form name="stockYearRangeForm" class="form-inline">
+    <label>Stock Code:</label>
+    <input name="input" required type="text" class="form-control" placeholder="000001"
+           ng-model="stock.code" ng-pattern="stock.pattern" ng-trim="true">
+    <span role="alert">
+        <span class="error" ng-show="stockYearRangeForm.input.$error.required">Required!</span>
+        <span class="error" ng-show="stockYearRangeForm.input.$error.pattern">6 digit number</span>
+    </span>
+</form>
+<div>
+    <stock-year-range class="chart" data="stock.data"></stock-year-range>
+</div>

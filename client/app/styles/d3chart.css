@@ -1,0 +1,26 @@
+span.error {
+  color: red;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #999;
+    shape-rendering: crispEdges;
+}
+
+.tick {
+    font: 10px sans-serif;
+}
+
+circle {
+    fill: steelblue;
+}
+
+.x-cursor, .y-cursor {
+    stroke: gray;
+    stroke-width: 0.5px;
+}
+
+path {
+    fill: orange;
+}

@@ -31,6 +31,11 @@ angular
         controller: 'AboutCtrl',
         controllerAs: 'about'
       })
+      .when('/stockyearrange', {
+        templateUrl: 'views/stockyearrange.html',
+        controller: 'StockyearrangeCtrl',
+        controllerAs: 'stockyearrange'
+      })
       .otherwise({
         redirectTo: '/'
       });
