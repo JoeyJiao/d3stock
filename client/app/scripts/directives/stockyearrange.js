@@ -230,7 +230,7 @@ angular.module('clientApp')
 
         return function(scope, element, attrs){
           scope.$watch('data', function(newVal, oldVal, scope){
-              if(scope.data !== ""){
+              if(scope.data !== "" && scope.data.length !== 0){
                   draw(svg, width, height, scope.data);
               } else {
                   svg.remove();
