@@ -30,3 +30,9 @@ path {
     fill-opacity: .125;
     shape-rendering: crispEdges;
 }
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
