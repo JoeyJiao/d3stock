@@ -22,7 +22,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
-class StockYearRangeView(APIView):
+class StockHistoryDataView(APIView):
     # authentication_classes = (authentication.BaseAuthentication,)
     # permission_classes = (permissions.IsAuthenticated,)
 
