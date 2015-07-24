@@ -5,6 +5,9 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'group', views.GroupViewSet)
+router.register(r'stock', views.StockViewSet)
+router.register(r'stockequity', views.StockEquityViewSet)
+router.register(r'stockdividend', views.StockDividendViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
