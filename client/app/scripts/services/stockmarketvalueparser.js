@@ -2,18 +2,18 @@
 
 /**
  * @ngdoc service
- * @name clientApp.StockHistoryValueParser
+ * @name clientApp.StockMarketValueParser
  * @description
- * # StockHistoryValueParser
+ * # StockMarketValueParser
  * Factory in the clientApp.
  */
 angular.module('clientApp')
-  .factory('StockHistoryValueParser', function () {
+  .factory('StockMarketValueParser', function () {
     return function(data) {
       var data = data.map(function(d){
         return {
           date: d.date,
-          y: +d.close
+          y: +d.close * +d.equity / 10000
         };
       });
       var parseDate = d3.time.format('%Y-%m-%d %H:%M:%S.%L').parse;

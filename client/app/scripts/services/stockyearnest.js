@@ -16,8 +16,8 @@ angular.module('clientApp')
         .map(function(d){
           return {
               x: d.key,
-              max: d3.max(d.values, function(x){ return +x.Close; }),
-              min: d3.min(d.values, function(x){ return +x.Close; })
+              max: d3.max(d.values, function(x){ return +x.close; }),
+              min: d3.min(d.values, function(x){ return +x.close; })
           };
         });
     }

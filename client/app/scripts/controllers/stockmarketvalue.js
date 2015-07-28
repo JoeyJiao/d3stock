@@ -2,15 +2,15 @@
 
 /**
  * @ngdoc function
- * @name clientApp.controller:StockyearrangeCtrl
+ * @name clientApp.controller:StockmarketvalueCtrl
  * @description
- * # StockyearrangeCtrl
+ * # StockmarketvalueCtrl
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('StockyearrangeCtrl', ['$scope', 'StockHttpLoader', 'StockYearNest', function ($scope, StockHttpLoader, StockYearNest) {
-		  $scope.stock = {
-url: '/api/stockhistorydata/',
+  .controller('StockmarketvalueCtrl', ['$scope', 'StockHttpLoader', 'StockMarketValueParser', function ($scope, StockHttpLoader, StockMarketValueParser) {
+    $scope.stock = {
+      url: '/api/stockhistorydata/',
       data: '',
       code: '',
       pattern: /^[0-9]{6}$/
@@ -28,9 +28,7 @@ url: '/api/stockhistorydata/',
         StockHttpLoader($scope.stock.url + code)
             .then(function(response){
                 console.info("Got data from " + $scope.stock.url + code);
-                var data = StockYearNest(JSON.parse(response.data), function(d){
-                    return (new Date(d.date)).getFullYear();
-                });
+                var data = StockMarketValueParser(JSON.parse(response.data));
                 $scope.stock.data = data;
             });
 

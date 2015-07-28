@@ -48,13 +48,15 @@ angular.module('clientApp')
         yLabelNode
             .append('text');
 
+        var max = d3.max(data, function(d){ return d.x; });
         var xScale = d3.time.scale()
-            .domain(d3.extent(data, function(d){ return d.x; }))
+            .domain([max-365*24*3600*1000, max])
             .range([margin, width - margin]);
 
         var xAxis = d3.svg.axis()
             .scale(xScale)
-            .ticks(5)
+            .ticks(10)
+            .tickFormat(d3.time.format('%y-%b'))
             .orient('bottom');
 
         var yScale = d3.scale.linear()
@@ -81,7 +83,6 @@ angular.module('clientApp')
             .x(function(d){ return xScale(d.x); })
             .y(function(d){ return yScale(d.y); });
 
-        var max = d3.max(data, function(d){ return d.x; });
         var brushScale = d3.time.scale()
             .domain(d3.extent(data, function(d){ return d.x; }))
             .range([margin, width - margin]);
@@ -140,8 +141,6 @@ angular.module('clientApp')
 //            });           
 //        svg.call(zoom);
     
-        xScale.domain(brush.extent());
-
         var xCursor = svg.select('.x-cursor');
         var yCursor = svg.select('.y-cursor');
         var xLabel = svg.select('.x-label');
@@ -179,7 +178,7 @@ angular.module('clientApp')
                 .attr('transform', 'translate(' + xLeft + ',' + xTop + ')rotate(-90)')
 				.select('text')
 				.attr('transform', 'translate(-55,5)')
-                .text(d.date.substr(2));
+                .text(d.date.substr(2,8));
 			xLabel.select('path')
 				.style('display', 'block');
 

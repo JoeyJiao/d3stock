@@ -41,6 +41,11 @@ angular
         controller: 'StockhistoryvalueCtrl',
         controllerAs: 'stockhistoryvalue'
       })
+      .when('/stockmarketvalue', {
+        templateUrl: 'views/stockmarketvalue.html',
+        controller: 'StockmarketvalueCtrl',
+        controllerAs: 'stockmarketvalue'
+      })
       .otherwise({
         redirectTo: '/'
       });

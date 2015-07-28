@@ -1,0 +1,14 @@
+<center><h3>China company stock total market close value.</h3></center>
+<form name="stockMarketValueForm" class="form-inline">
+    <label>Stock Code:</label>
+    <input name="input" required type="text" class="form-control" placeholder="000001"
+           ng-model="stock.code" ng-pattern="stock.pattern" ng-trim="true">
+    <span role="alert">
+        <span class="error" ng-show="stockMarketValueForm.input.$error.required">Required!</span>
+        <span class="error" ng-show="stockMarketValueForm.input.$error.pattern">6 digit number</span>
+        <span class="error" ng-show="stock.data == ''"><br></br>No response data available</span>
+    </span>
+</form>
+<div>
+    <stock-history-value class="chart" data="stock.data"></stock-history-value>
+</div>

@@ -29,7 +29,7 @@ angular.module('clientApp')
             .then(function(response){
                 console.info("Got data from " + $scope.stock.url + code);
                 var data = StockHistoryValueParser(JSON.parse(response.data));
-                $scope.stock.data = data.reverse();
+                $scope.stock.data = data;
             });
 
     }
