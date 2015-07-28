@@ -9,7 +9,7 @@
 angular.module('clientApp')
   .directive('stockHistoryValue', function () {
     var draw = function(svg, width, height, data){
-        var margin = 40;
+        var margin = 45;
         var brushMargin = margin/2;
         var duration = 200;
         var brushHeight = height/5;
@@ -51,7 +51,8 @@ angular.module('clientApp')
         var max = d3.max(data, function(d){ return d.x; });
         var xScale = d3.time.scale()
             .domain([max-365*24*3600*1000, max])
-            .range([margin, width - margin]);
+            .range([margin, width - margin])
+            .clamp(true);
 
         var xAxis = d3.svg.axis()
             .scale(xScale)
@@ -64,7 +65,8 @@ angular.module('clientApp')
                 0,
                 d3.max(data, function(d){ return d.y; })
             ])
-            .range([height - margin, margin]);
+            .range([height - margin, margin])
+            .clamp(true);
 
         var yAxis = d3.svg.axis()
             .scale(yScale)
@@ -182,23 +184,22 @@ angular.module('clientApp')
 			xLabel.select('path')
 				.style('display', 'block');
 
-            var y = pos[1] < margin ? margin: pos[1] > height - margin ? (height - margin) : pos[1];
 			yLabel
 				.transition()
 				.duration(duration)
 				.ease('cubic')
-				.attr('transform', 'translate(' + (margin/2 + yMargin) + ',' + y + ')')
+				.attr('transform', 'translate(' + (margin/2 + yMargin) + ',' + pos[1] + ')')
 				.select('text')
 				.attr('transform', 'translate(-20,3)')
-				.text(pos[1] < margin ? yMax: pos[1] > height - margin ? 0: d3.format('f')(yValue));
+				.text(d3.format('f')(yValue));
 			yLabel.select('path')
 				.style('display', 'block');
 
             yCursor
                 .attr('x1', 0)
-                .attr('y1', function(){ return pos[1]<margin?margin:pos[1]>(height-margin)?(height-margin):pos[1];})
+                .attr('y1', function(){ return pos[1];})
                 .attr('x2', xScale(xMax))
-                .attr('y2', function(){ return pos[1]<margin?margin:pos[1]>(height-margin)?(height-margin):pos[1];});
+                .attr('y2', function(){ return pos[1];});
 
         });
 
