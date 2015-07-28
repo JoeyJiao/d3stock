@@ -9,6 +9,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import *
 
+from .utils import bisector_left
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -48,17 +50,31 @@ class StockHistoryDataView(APIView):
     def get(self, request, stockcode, format=None):
         suffix = ''
         if stockcode.startswith('0'):
-            suffix = 'sz'
+            suffix = 'SZ'
         else:
-            suffix = 'ss'
+            suffix = 'SH'
 
-        resp = requests.get('http://table.finance.yahoo.com/table.csv?s=%s.%s' % (stockcode, suffix))
+        stockEquities = StockEquity.objects.all()
+
+        headers = {
+            'User-Agent': 'Mozilla/5.0'
+        }
+        resp = requests.get(
+            'http://xueqiu.com/S/%s%s/historical.csv' % (suffix, stockcode),
+            headers=headers
+        )
         if resp.status_code == 200:
             data = resp.text.split('\n')[:-1]
             keys = data[0].split(',')
+            keys = [x.replace('"', '') for x in keys]
             out = [{
-                key: val for key, val in zip(keys, prop.split(','))
+                key: val.replace('"', '') for key, val in zip(keys, prop.split(','))
             } for prop in data[1:]]
+
+            array = [x.date.isoformat() for x in stockEquities]
+            for each in out:
+                index = bisector_left(array, each['date'])
+                each['equity'] = stockEquities[index].totalFixedCapital
         else:
             out = []
 
