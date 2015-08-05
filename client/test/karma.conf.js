@@ -34,6 +34,9 @@ module.exports = function(config) {
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/d3/d3.js',
+      'bower_components/datatables/media/js/jquery.dataTables.js',
+      'bower_components/datatables-bootstrap3-plugin/media/js/datatables-bootstrap3.js',
+      'bower_components/datatables-bootstrap3-plugin/media/js/datatables-bootstrap3.min.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",
