@@ -149,7 +149,7 @@ angular.module('clientApp')
         $("table.table").dataTable({
             sDom: '<C>Tl<"H"f<"#paginate">>rt<"F"ip>',
             paginate: false,
-            scrollY: 800,
+            scrollY: 500,
             bProcessing: true,
             bAutoWidth: true,
             aaSorting: [
@@ -160,9 +160,10 @@ angular.module('clientApp')
             },
             bDestroy: false,
             bStateSave: true,
+            sScrollX: "100%",
+            bScrollCollapse: true,
             aaData: data
         });
-
     };
 
     return {
