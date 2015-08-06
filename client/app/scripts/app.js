@@ -46,6 +46,11 @@ angular
         controller: 'StockmarketvalueCtrl',
         controllerAs: 'stockmarketvalue'
       })
+      .when('/stockfenji', {
+        templateUrl: 'views/stockfenji.html',
+        controller: 'StockfenjiCtrl',
+        controllerAs: 'stockfenji'
+      })
       .otherwise({
         redirectTo: '/'
       });
