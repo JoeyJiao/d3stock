@@ -79,3 +79,17 @@ class StockHistoryDataView(APIView):
             out = []
 
         return Response(json.dumps(out))
+
+
+class StockFenjiDataView(APIView):
+
+    def get(self, request):
+        url = 'http://www.jisilu.cn/data/sfnew/{}/?'.format(request._request.path.split('/')[-1])
+        resp = requests.get(url)
+        if resp.status_code == 200:
+            data = resp.text
+        else:
+            data = []
+
+        return Response(data)
+

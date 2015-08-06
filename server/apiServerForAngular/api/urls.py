@@ -12,4 +12,5 @@ router.register(r'stockdividend', views.StockDividendViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^stockhistorydata/(?P<stockcode>[0-9]{6})$', views.StockHistoryDataView.as_view()),
+    url(r'^stockfenjidata/', views.StockFenjiDataView.as_view()),
 ]
