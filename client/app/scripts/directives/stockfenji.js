@@ -88,9 +88,14 @@ angular.module('clientApp')
                 row.push(data_b[b_id].fundb_index_increase_rt);
             }
 
+            row.push(
+                Math.round(((parseFloat((data_a[a_id].funda_value - data_m[m_id].lower_recalc_price) * (1 - 1 * 0.5/100.0)) + parseFloat(data_m[m_id].lower_recalc_price * ( 1 * 0.9))) / data_a[a_id].funda_current_price - 1) * 10000) / 100 + '%'
+            );
+            row.push(
+                Math.round((data_b[b_id].fundb_current_price - (1 * data_m[m_id].lower_recalc_price) * (1 * (1 + 0.1))) / data_b[b_id].fundb_current_price * 10000) / 100 + '%'
+            );
             rows.push(row);
         }
-//        console.info(rows);
         return rows;
     }
 
@@ -131,7 +136,10 @@ angular.module('clientApp')
             'B价格杠杆',
             'B净值杠杆',
             '跟踪指数',
-            '指数涨幅'
+            '指数涨幅',
+
+            'A下折最差收益',
+            'B下折亏损'
         ];
         table.append("thead").append("tr")
             .attr("class", "head")
